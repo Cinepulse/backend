@@ -1082,13 +1082,13 @@ router.get('/chatbot/link', async (req, res) => {
 router.post('/chatbot/link', async (req, res) => {
     try {
         const { link } = req.body;
-        let chatbotLink = await chatbotLink.findOne();
-        if (chatbotLink) {
-            chatbotLink.link = link;
+        let chatLink = await chatbotLink.findOne();
+        if (chatLink) {
+            chatLink.link = link;
         } else {
-            chatbotLink = new chatbotLink({ link });
+            chatLink = new chatbotLink({ link });
         }
-        await chatbotLink.save();
+        await chatLink.save(); // Save the document
         res.status(200).json({ success: true, message: 'Chatbot link updated successfully' });
     } catch (err) {
         console.error(err);
