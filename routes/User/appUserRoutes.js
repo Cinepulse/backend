@@ -20,6 +20,7 @@ import UserFeedback from '../../mongodb/models/Feedbacks/userFeedbackModel.js';
 import UserReport from '../../mongodb/models/Reports/userReportModel.js';
 import AdminReportReply from '../../mongodb/models/Admin/adminReportReplyModel.js';
 import chatbotLink from '../../mongodb/models/ChatBotLinkModel.js';
+import RecommendationLink from '../../mongodb/models/RecommendationLinkModel.js'
 import fetchuser from '../../middleware/fetchUser.js';
 
 const router = express.Router();
@@ -1093,6 +1094,35 @@ router.post('/chatbot/link', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: 'Failed to update chatbot link' });
+    }
+});
+
+// GET route to fetch the recommendation link
+router.get('/recommendation/link', async (req, res) => {
+    try {
+        const link = await RecommendationLink.findOne();
+        res.status(200).json({ success: true, link: link });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Failed to get recommendation link' });
+    }
+});
+
+// POST route to update the recommendation link
+router.post('/recommendation/link', async (req, res) => {
+    try {
+        const { link } = req.body;
+        let recommendationLink = await RecommendationLink.findOne();
+        if (recommendationLink) {
+            recommendationLink.link = link;
+        } else {
+            recommendationLink = new RecommendationLink({ link });
+        }
+        await recommendationLink.save(); // Save the document
+        res.status(200).json({ success: true, message: 'Recommendation link updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: 'Failed to update recommendation link' });
     }
 });
 
